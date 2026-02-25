@@ -1,0 +1,127 @@
+---
+title: "World Development Indicators 2022 Analysis"
+author: "Eric Wang"
+date: today
+format:
+  html: 
+    theme: cosmo
+    toc: true
+  pdf: 
+    toc: true
+---
+
+## Introduction
+## Introduction
+
+This report analyzes global economic and health metrics for the year 2022. We will conduct an exploratory data analysis focusing on three key variables: GDP per capita, life expectancy, and unemployment rate. The relationship between national income and population health is a foundational concept in demographic economics [@preston1975]. Furthermore, labor market stability plays a critical role in public health, as widespread unemployment has been consistently linked to higher mortality rates [@roelfs2011]. By visualizing these metrics, we aim to highlight the current state of global disparities.
+
+
+## Data Loading
+
+We will use Python and the `pandas` library to load and manipulate the World Development Indicators dataset for 2022. 
+
+```{python}
+#| echo: true
+import pandas as pd
+
+# Load the dataset
+wdi = pd.read_csv('wdi.csv')
+
+```
+
+## Exploratory Data Analysis
+
+To better understand the global landscape in 2022, we will focus our exploratory data analysis on three key indicators: 
+
+1. **GDP per capita** (`gdp_per_capita`): A measure of economic output per person.
+2. **Life expectancy** (`life_expectancy`): A core measure of public health and longevity.
+3. **Unemployment rate** (`unemployment_rate`): An indicator of labor market health and economic stability.
+
+First, let's examine the descriptive statistics and check for any missing data within these three columns. 
+
+```{python}
+#| echo: true
+#| label: eda-stats
+
+target_vars = ['gdp_per_capita', 'life_expectancy', 'unemployment_rate']
+
+print(wdi[target_vars].describe().round(2))
+
+print(wdi[target_vars].isna().sum())
+```
+
+### Visualizations
+
+To further analyze our selected indicators, we can visualize their relationships and distributions. 
+
+First, we will look at the relationship between a country's wealth (GDP per capita) and the health of its citizens (life expectancy). 
+
+```{python}
+#| echo: false
+#| label: fig-wealth-health
+#| fig-cap: "Scatter plot illustrating the positive relationship between GDP per Capita and Life Expectancy. Data source: World Bank World Development Indicators (2022)"
+
+import matplotlib.pyplot as plt
+
+
+plot_df = wdi.dropna(subset=['gdp_per_capita', 'life_expectancy'])
+
+# Create scatter plot
+plt.figure(figsize=(9, 6))
+plt.scatter(plot_df['gdp_per_capita'], plot_df['life_expectancy'], alpha=0.6, color='steelblue', edgecolors='w')
+plt.title('Wealth vs. Health: GDP per Capita and Life Expectancy (2022)')
+plt.xlabel('GDP per Capita (Current US$)')
+plt.ylabel('Life Expectancy at Birth (Years)')
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+```
+
+The scatter plot above demonstrates a clear trend in that life expecatancy is positively correlated with GDP per Capita. Higher GDP generally is associated with higher life expectancy, although it seems to level off at the upper end, forming a logistic curve.
+
+Next, we examine the labor market by highlighting the countries that experienced the highest unemployment rates in 2022.
+
+```{python}
+#| echo: false
+#| label: fig-unemployment
+#| fig-cap: "Bar chart displaying the 15 countries with the highest reported unemployment rates. Data source: World Bank World Development Indicators (2022)"
+
+
+top_unemp = wdi.dropna(subset=['unemployment_rate']).nlargest(15, 'unemployment_rate').sort_values('unemployment_rate', ascending=True)
+
+# Create horizontal bar chart
+plt.figure(figsize=(9, 6))
+plt.barh(top_unemp['country'], top_unemp['unemployment_rate'], color='salmon')
+plt.title('Top 15 Countries by Unemployment Rate (2022)')
+plt.xlabel('Unemployment Rate (% of total labor force)')
+plt.ylabel('Country')
+plt.grid(axis='x', linestyle='--', alpha=0.5)
+plt.tight_layout()
+plt.show()
+```
+
+This bar chart highlights the nations facing the most severe labor market challenges, with several countries experiencing unemployment rates exceeding 20%.
+
+### Key Statistics Summary
+
+To consolidate our findings, we can extract the global averages and extremes for our selected indicators. 
+
+```{python}
+#| echo: false
+#| label: tbl-key-stats
+#| tbl-cap: "Global Mean, Minimum, and Maximum values for GDP, Life Expectancy, and Unemployment (2022)."
+
+from IPython.display import Markdown
+
+stats_df = wdi[['gdp_per_capita', 'life_expectancy', 'unemployment_rate']].describe().loc[['mean', 'min', 'max']].round(2)
+
+stats_df.columns = ['GDP per Capita (US$)', 'Life Expectancy (Years)', 'Unemployment Rate (%)']
+
+Markdown(stats_df.to_markdown())
+```
+
+As detailed in @tbl-key-stats, the global average life expectancy is approximately 72 years, but the minimum drops down to roughly 53 years. This severe disparity in health outcomes is closely tied to economic standing, which we visualized earlier in @fig-wealth-health. That scatter plot clearly demonstrates that nations with higher economic output tend to secure much longer life expectancies for their citizens.
+
+Furthermore, global economic stability varies wildly. While the average global unemployment rate sits around 7% (@tbl-key-stats), our bar chart analysis in @fig-unemployment highlights that several nations faced staggering unemployment crises, with rates exceeding 20% to 30% of their total labor force in 2022.
+
+## References

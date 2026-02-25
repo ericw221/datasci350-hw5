@@ -1,0 +1,43 @@
+## Data Loading
+
+We will use Python and the `pandas` library to load and manipulate the World Development Indicators dataset for 2022. 
+
+```{python}
+#| echo: true
+import pandas as pd
+
+# Load the dataset
+wdi = pd.read_csv('wdi.csv')
+
+```
+
+## Exploratory Data Analysis
+
+To better understand the global landscape in 2022, we will focus our exploratory data analysis on three key indicators: 
+
+1. **GDP per capita** (`gdp_per_capita`): A measure of economic output per person.
+2. **Life expectancy** (`life_expectancy`): A core measure of public health and longevity.
+3. **Unemployment rate** (`unemployment_rate`): An indicator of labor market health and economic stability.
+
+### Summary Statistics and Data Quality
+
+First, let's examine the descriptive statistics and check for any missing data within these three columns. By setting `#| echo: true`, we ensure the code is visible in our final report.
+
+```{python}
+#| echo: true
+#| label: eda-stats
+
+import pandas as pd
+
+# Load the dataset
+df = pd.read_csv('wdi.csv')
+
+# Define our three chosen indicators
+target_vars = ['gdp_per_capita', 'life_expectancy', 'unemployment_rate']
+
+# Generate and print descriptive statistics
+print("--- Summary Statistics ---")
+print(df[target_vars].describe().round(2))
+
+print("\n--- Missing Values Count ---")
+print(df[target_vars].isna().sum())

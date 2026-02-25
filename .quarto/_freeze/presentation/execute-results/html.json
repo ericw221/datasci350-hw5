@@ -1,0 +1,12 @@
+{
+  "hash": "07d6c4bb41d7dd007f3fe1998ff7e1c1",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Global Disparities in 2022\"\nsubtitle: \"An Analysis of World Development Indicators\"\nauthor: \"Eric Wang\"\ndate: today\nformat: \n  revealjs:\n    theme: night\n    transition: slide\n    slide-number: true\nexecute:\n  echo: false\n---\n\n## Introduction\n\n**Objective:** Analyze global economic and health metrics for the year 2022 using the World Development Indicators dataset.\n\n**Key Indicators:**\n\n* **GDP per Capita:** Economic health and output.\n* **Life Expectancy:** Public health and longevity.\n* **Unemployment Rate:** Labor market stability.\n\n---\n\n## Global Averages & Extremes\n\nBefore visualizing the trends, let's look at the baseline statistics across reporting countries in 2022.\n\n::: {#c9a92b89 .cell execution_count=1}\n\n::: {.cell-output .cell-output-display .cell-output-markdown execution_count=1}\n|      |   GDP per Capita ($) |   Life Expectancy (Yrs) |   Unemployment (%) |\n|:-----|---------------------:|------------------------:|-------------------:|\n| mean |             20345.7  |                   72.42 |               7.27 |\n| min  |               259.03 |                   53    |               0.13 |\n| max  |            240862    |                   85.38 |              37.85 |\n:::\n:::\n\n\n## Wealth against Health\n\nThere is a strong positive relationship between GDP and life expectancy.\n\n::: {#6937897e .cell execution_count=2}\n\n::: {.cell-output .cell-output-display}\n![](presentation_files/figure-revealjs/cell-3-output-1.png){width=808 height=449 fig-align='center'}\n:::\n:::\n\n\n## Labor Market\n\nSome countries have high unemployment.\n\n::: {#1802d420 .cell execution_count=3}\n\n::: {.cell-output .cell-output-display}\n![](presentation_files/figure-revealjs/cell-4-output-1.png){width=980 height=449 fig-align='center'}\n:::\n:::\n\n\n",
+    "supporting": [
+      "presentation_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

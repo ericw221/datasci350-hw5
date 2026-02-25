@@ -1,0 +1,91 @@
+---
+title: "Global Disparities in 2022"
+subtitle: "An Analysis of World Development Indicators"
+author: "Eric Wang"
+date: today
+format: 
+  revealjs:
+    theme: night
+    transition: slide
+    slide-number: true
+execute:
+  echo: false
+---
+
+## Introduction
+
+**Objective:** Analyze global economic and health metrics for the year 2022 using the World Development Indicators dataset.
+
+**Key Indicators:**
+
+* **GDP per Capita:** Economic health and output.
+* **Life Expectancy:** Public health and longevity.
+* **Unemployment Rate:** Labor market stability.
+
+---
+
+## Global Averages & Extremes
+
+Before visualizing the trends, let's look at the baseline statistics across reporting countries in 2022.
+
+```{python}
+import pandas as pd
+from IPython.display import Markdown
+
+# Load data and generate stats
+df = pd.read_csv('wdi.csv')
+stats_df = df[['gdp_per_capita', 'life_expectancy', 'unemployment_rate']].describe().loc[['mean', 'min', 'max']].round(2)
+stats_df.columns = ['GDP per Capita ($)', 'Life Expectancy (Yrs)', 'Unemployment (%)']
+
+Markdown(stats_df.to_markdown())
+```
+
+## Wealth against Health
+
+There is a strong positive relationship between GDP and life expectancy.
+
+```{python}
+#| fig-align: center
+
+import matplotlib.pyplot as plt
+
+plot_df = df.dropna(subset=['gdp_per_capita', 'life_expectancy'])
+
+plt.figure(figsize=(10, 5))
+plt.scatter(plot_df['gdp_per_capita'], plot_df['life_expectancy'], alpha=0.7, color='cyan', edgecolors='w')
+plt.title('GDP per Capita vs. Life Expectancy (2022)', color='white')
+plt.xlabel('GDP per Capita (Current US$)', color='white')
+plt.ylabel('Life Expectancy at Birth (Years)', color='white')
+plt.tick_params(colors='white')
+
+# Make the background transparent to match the dark slide theme
+plt.gcf().patch.set_alpha(0.0)
+plt.gca().patch.set_alpha(0.0)
+
+plt.grid(True, linestyle='--', alpha=0.3)
+plt.show()
+```
+
+## Labor Market
+
+Some countries have high unemployment.
+
+```{python}
+#| fig-align: center
+
+top_unemp = df.dropna(subset=['unemployment_rate']).nlargest(10, 'unemployment_rate').sort_values('unemployment_rate', ascending=True)
+
+plt.figure(figsize=(10, 5))
+plt.barh(top_unemp['country'], top_unemp['unemployment_rate'], color='salmon')
+plt.title('Top 10 Countries by Unemployment Rate (2022)', color='white')
+plt.xlabel('Unemployment Rate (%)', color='white')
+plt.tick_params(colors='white')
+
+# Make the background transparent for the dark theme
+plt.gcf().patch.set_alpha(0.0)
+plt.gca().patch.set_alpha(0.0)
+
+plt.grid(axis='x', linestyle='--', alpha=0.3)
+plt.show()
+```
+
